@@ -13,19 +13,17 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
+/* a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
 }
 a:hover {
   color: #535bf2;
-}
+} */
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -33,6 +31,7 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #1b4887;
 }
 
 button {
@@ -54,10 +53,32 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.container {
+  display: grid;
+  row-gap: 2rem;
+  column-gap: 3rem;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.section {
+  background-color: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 2rem 5rem rgba(0, 0, 0, 0.06);
+}
+
+.section--preview {
+  grid-column: 2 / -1;
+  grid-row: 1 / -1;
+  border-radius: 0;
+}
+
+/* MEDIA QUERIES */
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #eee;
   }
   a:hover {
     color: #747bff;
