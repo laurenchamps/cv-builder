@@ -1,4 +1,3 @@
-// import { useState } from 'react';
 import { useState } from 'react';
 import './App.css';
 
@@ -6,22 +5,48 @@ const initialDetails = {
   firstName: 'Juno',
   lastName: 'Bowden',
   email: 'junobowden@gmail.com',
-  mobile: '0400 123 456',
+  phone: '0400 123 456',
 };
+
+const initialQualifications = [
+  {
+    qualification: 'Bachelor of Science',
+    institution: 'University of South Australia',
+    start: 2000,
+    end: 2003,
+    description:
+      'Understanding, reasoning and improving the natural world through systematic observation.',
+    id: 123456789,
+  },
+  {
+    qualification: 'Master of Public Health',
+    institution: 'University of Adelaide',
+    start: 2006,
+    end: 2008,
+    description:
+      'In-depth study of epidemiology, health promotion, biostatistics, communicable diseases and global public health',
+    id: 987654321,
+  },
+];
 
 export default function App() {
   const [firstName, setFirstName] = useState(initialDetails.firstName);
   const [lastName, setLastName] = useState(initialDetails.lastName);
   const [email, setEmail] = useState(initialDetails.email);
-  const [mobile, setMobile] = useState(initialDetails.mobile);
+  const [phone, setPhone] = useState(initialDetails.phone);
+  const fullName = `${firstName} ${lastName}`;
 
-  const [qualifications, setQualifications] = useState([]);
+  const [qualifications, setQualifications] = useState(initialQualifications);
 
-  function handleAddQuals(qual) {
-    setQualifications((quals) => [...qualifications, qual]);
+  function handleAddQualification(qual) {
+    setQualifications((qualifications) => [...qualifications, qual]);
   }
 
-  const fullName = `${firstName} ${lastName}`;
+  function handleDeleteQualification(qual) {
+    setQualifications((qualifications) =>
+      qualifications.filter((qualification) => qualification.id !== qual.id)
+    );
+  }
 
   return (
     <>
@@ -29,208 +54,332 @@ export default function App() {
         <h1>CV Builder</h1>
       </header>
       <main className="container">
-        <Form className="section section--input">
-          <h2>Personal details</h2>
-          <FormField
-            label="First name"
-            type="text"
-            personalDetail={firstName}
-            onAddDetail={setFirstName}
-          />
-          <FormField
-            label="Last name"
-            type="text"
-            personalDetail={lastName}
-            onAddDetail={setLastName}
-          />
-          <FormField
-            label="Email"
-            type="email"
-            personalDetail={email}
-            onAddDetail={setEmail}
-          />
-          <FormField
-            label="Mobile"
-            type="text"
-            personalDetail={mobile}
-            onAddDetail={setMobile}
-          />
-        </Form>
-        <EducationForm onAddQuals={handleAddQuals} />
-        <Form className="section section--input">
-          <h2>Experience</h2>
-          <FormField label="Job title" type="text" placeholder="job title" />
-          <FormField label="Employer" type="text" placeholder="employer" />
-          <FormField label="Start date" type="text" placeholder="start date" />
-          <FormField label="End date" type="text" placeholder="end date" />
-          <FormField label="Description" type="text" />
-        </Form>
+        <FormAddPersonalDetails
+          firstName={firstName}
+          lastName={lastName}
+          email={email}
+          phone={phone}
+          setFirstName={setFirstName}
+          setLastName={setLastName}
+          setEmail={setEmail}
+          setPhone={setPhone}
+        />
+        <QualificationList
+          qualifications={qualifications}
+          onAddQualification={handleAddQualification}
+          onDeleteQualification={handleDeleteQualification}
+        />
+        <FormAddExperience />
         <section className="section section--preview">
           {/* <h2>Preview</h2> */}
-          <PersonalDetails name={fullName} email={email} mobile={mobile} />
-          <EducationList qualifications={qualifications} />
-          <Experience />
+          <DisplayPersonalDetails name={fullName} email={email} phone={phone} />
+          <DisplayEducation qualifications={qualifications} />
+          <DisplayExperience />
         </section>
       </main>
     </>
   );
 }
 
-function Form({ className, children, handleSubmit }) {
-  return (
-    <form className={className} onSubmit={handleSubmit}>
-      {children}
-    </form>
-  );
-}
+function QualificationList({
+  qualifications,
+  onAddQualification,
+  onDeleteQualification,
+}) {
+  const [showQualificationForm, setShowQualificationForm] = useState(false);
 
-function EducationForm({ onAddQuals }) {
-  const [qualification, setQualification] = useState('testqual');
-  const [qualInstitution, setQualInstitution] = useState('testinst');
-  const [qualStart, setQualStart] = useState('teststart');
-  const [qualEnd, setQualEnd] = useState('testend');
-  const [qualDescription, setQualDescription] = useState('testdesc');
-
-  function handleQualSubmit(e) {
-    e.preventDefault();
-
-    if (!qualification) return;
-
-    const newQualification = {
-      qualification,
-      qualInstitution,
-      qualStart,
-      qualEnd,
-      qualDescription,
-      id: Date.now(),
-    };
-
-    onAddQuals(newQualification);
-
-    setQualification('');
-    setQualInstitution('');
-    setQualStart('');
-    setQualEnd('');
-    setQualDescription('');
+  function handleToggleQualificationForm() {
+    setShowQualificationForm((show) => !show);
   }
 
   return (
-    <form
-      className="education-form section section--input"
-      onSubmit={handleQualSubmit}
-    >
-      <h2>Education</h2>
+    <section className="section section--qualifications">
+      <h2>Qualifications</h2>
+      <ul className="qualification-list">
+        {qualifications.map((qual) => (
+          <Qualification
+            qualification={qual}
+            key={qual.id}
+            onDeleteQualification={onDeleteQualification}
+          />
+        ))}
+      </ul>
+      {!showQualificationForm && (
+        <Button onClick={handleToggleQualificationForm}>
+          Add qualification
+        </Button>
+      )}
+      {showQualificationForm && (
+        <FormAddQualification
+          onAddQualification={onAddQualification}
+          onToggleQualificationForm={handleToggleQualificationForm}
+          // onEditQuals={handleEditQuals}
+          // qualifications={qualifications}
+        />
+      )}
+      {showQualificationForm && (
+        <Button onClick={handleToggleQualificationForm}>Cancel</Button>
+      )}
+    </section>
+  );
+}
+
+function Button({ children, onClick }) {
+  return (
+    <button className="btn" onClick={onClick}>
+      {children}
+    </button>
+  );
+}
+
+function Qualification({ qualification, onDeleteQualification }) {
+  return (
+    <li className="qualification">
+      <div>
+        <h3>{qualification.qualification}</h3>
+        <p className="subtitle">{qualification.institution}</p>
+      </div>
+      <Button onClick={() => onDeleteQualification(qualification)}>
+        Delete
+      </Button>
+    </li>
+  );
+}
+
+function FormAddPersonalDetails({
+  firstName,
+  lastName,
+  email,
+  phone,
+  setFirstName,
+  setLastName,
+  setEmail,
+  setPhone,
+}) {
+  return (
+    <form className="section section--input">
+      <h2>Personal details</h2>
+
       <div className="form-field">
-        <label>Qualification</label>
+        <label>First name</label>
         <input
           type="text"
-          value={qualification}
-          onChange={(e) => setQualification(e.target.value)}
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
         />
       </div>
+
       <div className="form-field">
-        <label>University / School / Institution</label>
+        <label>Last name</label>
         <input
           type="text"
-          value={qualInstitution}
-          onChange={(e) => setQualInstitution(e.target.value)}
-        ></input>
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
       </div>
+
       <div className="form-field">
-        <label>Start date</label>
+        <label>Email</label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Phone</label>
         <input
           type="text"
-          value={qualStart}
-          onChange={(e) => setQualStart(e.target.value)}
-        ></input>
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
       </div>
-      <div className="form-field">
-        <label>End date</label>
-        <input
-          type="text"
-          value={qualEnd}
-          onChange={(e) => setQualEnd(e.target.value)}
-        ></input>
-      </div>
-      <div className="form-field">
-        <label>Description</label>
-        <input
-          type="text"
-          value={qualDescription}
-          onChange={(e) => setQualDescription(e.target.value)}
-        ></input>
-      </div>
-      <button type="submit">Add</button>
     </form>
   );
 }
 
-function FormField({
-  label,
-  type,
-  placeholder = null,
-  personalDetail,
-  onAddDetail,
+function FormAddQualification({
+  onAddQualification,
+  onToggleQualificationForm,
 }) {
+  const [qualification, setQualification] = useState('');
+  const [institution, setInstitution] = useState('');
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const [description, setDescription] = useState('');
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    if (!qualification || !institution) return;
+
+    const newQualification = {
+      qualification,
+      institution,
+      start,
+      end,
+      description,
+      id: crypto.randomUUID(),
+    };
+
+    onAddQualification(newQualification);
+
+    setQualification('');
+    setInstitution('');
+    setStart('');
+    setEnd('');
+    setDescription('');
+
+    onToggleQualificationForm(false);
+  }
+
   return (
-    <div className="form-field">
-      <label>{label}</label>
-      <input
-        type={type}
-        placeholder={placeholder}
-        value={personalDetail}
-        onChange={(e) => onAddDetail(e.target.value)}
-      ></input>
+    <div>
+      <form className="education-form" onSubmit={handleSubmit}>
+        <h3>Add qualification</h3>
+        <div className="form-field">
+          <label>Qualification</label>
+          <input
+            type="text"
+            value={qualification}
+            onChange={(e) => setQualification(e.target.value)}
+          />
+        </div>
+        <div className="form-field">
+          <label>University / School / Institution</label>
+          <input
+            type="text"
+            value={institution}
+            onChange={(e) => setInstitution(e.target.value)}
+          ></input>
+        </div>
+        <div className="form-field">
+          <label>Start date</label>
+          <input
+            type="text"
+            value={start}
+            onChange={(e) => setStart(e.target.value)}
+          ></input>
+        </div>
+        <div className="form-field">
+          <label>End date</label>
+          <input
+            type="text"
+            value={end}
+            onChange={(e) => setEnd(e.target.value)}
+          ></input>
+        </div>
+        <div className="form-field">
+          <label>Description</label>
+          <input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          ></input>
+        </div>
+        <div className="btn-group">
+          <Button>Add</Button>
+        </div>
+      </form>
     </div>
   );
 }
 
-function PersonalDetails({ name, email, mobile }) {
+function FormAddExperience() {
+  return (
+    <form className="section section--input">
+      <h2>Experience</h2>
+
+      <div className="form-field">
+        <label>Title</label>
+        <input
+          type="text"
+          // value={title}
+          // onChange={(e) => setPhone(e.target.value)}
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Employer</label>
+        <input
+          type="text"
+          // value={phone}
+          // onChange={(e) => setPhone(e.target.value)}
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Start date</label>
+        <input
+          type="text"
+          // value={phone}
+          // onChange={(e) => setPhone(e.target.value)}
+        />
+      </div>
+
+      <div className="form-field">
+        <label>End date</label>
+        <input
+          type="text"
+          // value={phone}
+          // onChange={(e) => setPhone(e.target.value)}
+        />
+      </div>
+
+      <div className="form-field">
+        <label>Description</label>
+        <input
+          type="text"
+          placeholder="Description of role responsibilities and achievements"
+          // value={phone}
+          // onChange={(e) => setPhone(e.target.value)}
+        />
+      </div>
+    </form>
+  );
+}
+
+function DisplayPersonalDetails({ name, email, phone }) {
   return (
     <div className="personal-details">
       <p className="name">{name}</p>
       <div className="contact">
         <p>e: {email}</p>
-        <p>m: {mobile}</p>
+        <p>m: {phone}</p>
       </div>
     </div>
   );
 }
 
-function EducationList({ qualifications }) {
+function DisplayEducation({ qualifications }) {
   return (
     <div className="preview preview--education">
       <h2>Education</h2>
       <div>
         {qualifications.map((qual) => (
           <div key={qual.id}>
-            <h3>{qual.qualification}</h3>
-            <p>{qual.qualInstitution}</p>
-            <p>{qual.qualStart}</p>
-            <p>{qual.qualEnd}</p>
-            <p>{qual.qualDescription}</p>
+            <h3>{qual.name}</h3>
+            <p>{qual.institution}</p>
+            <p>
+              {qual.start} - {qual.end}
+            </p>
+            <p>{qual.description}</p>
           </div>
         ))}
       </div>
-
-      <h3>Full stack JavaScript</h3>
-      <p className="subheading">The Odin Project</p>
-      <p className="description">
-        Self-direct study following The Odin Project&apos;s open-source
-        curriculum
-      </p>
     </div>
   );
 }
 
-function Experience() {
+function DisplayExperience() {
   return (
     <div className="preview preview--experience">
       <h2>Experience</h2>
-      <h3>Job title</h3>
-      <p className="subheading">Employer</p>
-      <p>Start date - end date</p>
-      <p>Description</p>
+      <h3>X</h3>
+      <p className="subheading">X</p>
+      <p>X - X</p>
+      <p>X</p>
     </div>
   );
 }

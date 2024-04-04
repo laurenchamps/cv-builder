@@ -122,6 +122,37 @@ button:focus-visible {
   align-items: start;
 }
 
+.section--qualifications {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.qualification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.qualification {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  align-self: center;
+  background-color: #1b4887;
+  color: #fff;
+  border-radius: 100px;
+}
+
+.btn-group {
+  display: flex;
+  gap: 4rem;
+  justify-content: center;
+}
+
 /* MEDIA QUERIES */
 
 @media (prefers-color-scheme: light) {
