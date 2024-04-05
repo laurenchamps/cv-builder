@@ -1,5 +1,8 @@
 import { useState } from 'react';
-import './App.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faPhone } from '@fortawesome/free-solid-svg-icons';
+import './main.scss';
 
 const initialDetails = {
   firstName: 'Juno',
@@ -50,7 +53,8 @@ export default function App() {
 
   return (
     <>
-      <header>
+      <header className="header">
+        <img src="./public/icons8-resume-100.png"></img>
         <h1>CV Builder</h1>
       </header>
       <main className="container">
@@ -73,10 +77,25 @@ export default function App() {
         <section className="section section--preview">
           {/* <h2>Preview</h2> */}
           <DisplayPersonalDetails name={fullName} email={email} phone={phone} />
-          <DisplayEducation qualifications={qualifications} />
-          <DisplayExperience />
+          <div className="preview-container">
+            <DisplayEducation qualifications={qualifications} />
+            <DisplayExperience />
+          </div>
         </section>
       </main>
+      <footer className="footer">
+        <p>
+          &copy; Lauren Champs 2024.{' '}
+          <a target="_blank" href="https://icons8.com/icon/121320/resume">
+            {' '}
+            Resume
+          </a>{' '}
+          icon by{' '}
+          <a target="_blank" href="https://icons8.com">
+            Icons8.
+          </a>
+        </p>
+      </footer>
     </>
   );
 }
@@ -93,7 +112,7 @@ function QualificationList({
   }
 
   return (
-    <section className="section section--qualifications">
+    <section className="input-block section__qualifications">
       <h2>Qualifications</h2>
       <ul className="qualification-list">
         {qualifications.map((qual) => (
@@ -105,7 +124,7 @@ function QualificationList({
         ))}
       </ul>
       {!showQualificationForm && (
-        <Button onClick={handleToggleQualificationForm}>
+        <Button onClick={handleToggleQualificationForm} type="btn-primary">
           Add qualification
         </Button>
       )}
@@ -124,9 +143,9 @@ function QualificationList({
   );
 }
 
-function Button({ children, onClick }) {
+function Button({ children, onClick, type }) {
   return (
-    <button className="btn" onClick={onClick}>
+    <button className={`btn ${type}`} onClick={onClick}>
       {children}
     </button>
   );
@@ -157,7 +176,7 @@ function FormAddPersonalDetails({
   setPhone,
 }) {
   return (
-    <form className="section section--input">
+    <form className="input-block">
       <h2>Personal details</h2>
 
       <div className="form-field">
@@ -236,7 +255,7 @@ function FormAddQualification({
 
   return (
     <div>
-      <form className="education-form" onSubmit={handleSubmit}>
+      <form className="form__qualifications" onSubmit={handleSubmit}>
         <h3>Add qualification</h3>
         <div className="form-field">
           <label>Qualification</label>
@@ -278,9 +297,7 @@ function FormAddQualification({
             onChange={(e) => setDescription(e.target.value)}
           ></input>
         </div>
-        <div className="btn-group">
-          <Button>Add</Button>
-        </div>
+        <Button type="btn--right">Add</Button>
       </form>
     </div>
   );
@@ -288,7 +305,7 @@ function FormAddQualification({
 
 function FormAddExperience() {
   return (
-    <form className="section section--input">
+    <form className="input-block form__experience">
       <h2>Experience</h2>
 
       <div className="form-field">
@@ -345,8 +362,14 @@ function DisplayPersonalDetails({ name, email, phone }) {
     <div className="personal-details">
       <p className="name">{name}</p>
       <div className="contact">
-        <p>e: {email}</p>
-        <p>m: {phone}</p>
+        <p>
+          <FontAwesomeIcon icon={faEnvelope} />
+          <span> : &nbsp;{email}</span>
+        </p>
+        <p>
+          <FontAwesomeIcon icon={faPhone} />
+          <span> : &nbsp;{phone}</span>
+        </p>
       </div>
     </div>
   );
@@ -355,16 +378,16 @@ function DisplayPersonalDetails({ name, email, phone }) {
 function DisplayEducation({ qualifications }) {
   return (
     <div className="preview preview--education">
-      <h2>Education</h2>
+      <h2 className="section-title">Education</h2>
       <div>
         {qualifications.map((qual) => (
-          <div key={qual.id}>
-            <h3>{qual.name}</h3>
-            <p>{qual.institution}</p>
-            <p>
+          <div key={qual.id} className="item">
+            <h3 className="item__title">{qual.qualification}</h3>
+            <p className="item__subtitle">{qual.institution}</p>
+            <p className="item__dates">
               {qual.start} - {qual.end}
             </p>
-            <p>{qual.description}</p>
+            <p className="item__description">{qual.description}</p>
           </div>
         ))}
       </div>
@@ -375,7 +398,7 @@ function DisplayEducation({ qualifications }) {
 function DisplayExperience() {
   return (
     <div className="preview preview--experience">
-      <h2>Experience</h2>
+      <h2 className="section-title">Experience</h2>
       <h3>X</h3>
       <p className="subheading">X</p>
       <p>X - X</p>
