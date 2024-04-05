@@ -83,7 +83,7 @@ export default function App() {
   return (
     <>
       <header className="header">
-        <img src="./public/icons8-resume-100.png"></img>
+        <img src="./icons8-resume-100.png"></img>
         <h1>CV Builder</h1>
       </header>
       <main className="container">
