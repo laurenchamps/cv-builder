@@ -32,6 +32,17 @@ const initialQualifications = [
   },
 ];
 
+const initialEmployment = [
+  {
+    jobTitle: 'Web developer',
+    employer: 'Google',
+    start: 'Nov 2018',
+    end: '',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+  },
+];
+
 export default function App() {
   const [firstName, setFirstName] = useState(initialDetails.firstName);
   const [lastName, setLastName] = useState(initialDetails.lastName);
@@ -41,6 +52,8 @@ export default function App() {
 
   const [qualifications, setQualifications] = useState(initialQualifications);
 
+  const [employment, setEmployment] = useState(initialEmployment);
+
   function handleAddQualification(qual) {
     setQualifications((qualifications) => [...qualifications, qual]);
   }
@@ -48,6 +61,16 @@ export default function App() {
   function handleDeleteQualification(qual) {
     setQualifications((qualifications) =>
       qualifications.filter((qualification) => qualification.id !== qual.id)
+    );
+  }
+
+  function handleAddEmployment(role) {
+    setEmployment((employment) => [...employment, role]);
+  }
+
+  function handleDeleteEmployment(role) {
+    setEmployment((employment) =>
+      employment.filter((empl) => empl.id !== role.id)
     );
   }
 
@@ -73,13 +96,17 @@ export default function App() {
           onAddQualification={handleAddQualification}
           onDeleteQualification={handleDeleteQualification}
         />
-        <FormAddExperience />
+        <EmploymentList
+          employment={employment}
+          onAddEmployment={handleAddEmployment}
+          onDeleteEmployment={handleDeleteEmployment}
+        />
         <section className="section section--preview">
           {/* <h2>Preview</h2> */}
           <DisplayPersonalDetails name={fullName} email={email} phone={phone} />
           <div className="preview-container">
             <DisplayEducation qualifications={qualifications} />
-            <DisplayExperience />
+            <DisplayExperience employment={employment} />
           </div>
         </section>
       </main>
@@ -153,7 +180,7 @@ function Button({ children, onClick, type }) {
 
 function Qualification({ qualification, onDeleteQualification }) {
   return (
-    <li className="qualification">
+    <li className="list-item">
       <div>
         <h3>{qualification.qualification}</h3>
         <p className="subtitle">{qualification.institution}</p>
@@ -303,17 +330,95 @@ function FormAddQualification({
   );
 }
 
-function FormAddExperience() {
+function EmploymentList({ employment, onAddEmployment, onDeleteEmployment }) {
+  const [showEmploymentForm, setShowEmploymentForm] = useState('');
+
+  function handleToggleEmploymentForm() {
+    setShowEmploymentForm((show) => !show);
+  }
+
   return (
-    <form className="input-block form__experience">
+    <section className="input-block section__experience">
       <h2>Experience</h2>
+      <ul className="employment-list">
+        {employment.map((empl) => (
+          <Employment
+            employment={empl}
+            key={empl.id}
+            onDeleteEmployment={onDeleteEmployment}
+          />
+        ))}
+      </ul>
+      {!showEmploymentForm && (
+        <Button onClick={handleToggleEmploymentForm} type="btn-primary">
+          Add role
+        </Button>
+      )}
+      {showEmploymentForm && (
+        <FormAddEmployment
+          onAddEmployment={onAddEmployment}
+          onToggleEmploymentForm={handleToggleEmploymentForm}
+        />
+      )}
+      {showEmploymentForm && (
+        <Button onClick={handleToggleEmploymentForm}>Cancel</Button>
+      )}
+    </section>
+  );
+}
+
+function Employment({ employment, onDeleteEmployment }) {
+  return (
+    <li className="list-item">
+      <div>
+        <h3>{employment.jobTitle}</h3>
+        <p className="subtitle">{employment.employer}</p>
+      </div>
+      <Button onClick={() => onDeleteEmployment(employment)}>Delete</Button>
+    </li>
+  );
+}
+
+function FormAddEmployment({ onAddEmployment, onToggleEmploymentForm }) {
+  const [jobTitle, setJobTitle] = useState('');
+  const [employer, setEmployer] = useState('');
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const [description, setDescription] = useState('');
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const newRole = {
+      jobTitle,
+      employer,
+      start,
+      end,
+      description,
+      id: crypto.randomUUID(),
+    };
+
+    onAddEmployment(newRole);
+
+    setJobTitle('');
+    setEmployer('');
+    setStart('');
+    setEnd('');
+    setDescription('');
+
+    onToggleEmploymentForm(false);
+  }
+
+  return (
+    <form className="form__employment" onSubmit={handleSubmit}>
+      <h3>Add employment</h3>
 
       <div className="form-field">
-        <label>Title</label>
+        <label>Job title</label>
         <input
           type="text"
-          // value={title}
-          // onChange={(e) => setPhone(e.target.value)}
+          value={jobTitle}
+          onChange={(e) => setJobTitle(e.target.value)}
         />
       </div>
 
@@ -321,8 +426,8 @@ function FormAddExperience() {
         <label>Employer</label>
         <input
           type="text"
-          // value={phone}
-          // onChange={(e) => setPhone(e.target.value)}
+          value={employer}
+          onChange={(e) => setEmployer(e.target.value)}
         />
       </div>
 
@@ -330,8 +435,8 @@ function FormAddExperience() {
         <label>Start date</label>
         <input
           type="text"
-          // value={phone}
-          // onChange={(e) => setPhone(e.target.value)}
+          value={start}
+          onChange={(e) => setStart(e.target.value)}
         />
       </div>
 
@@ -339,8 +444,8 @@ function FormAddExperience() {
         <label>End date</label>
         <input
           type="text"
-          // value={phone}
-          // onChange={(e) => setPhone(e.target.value)}
+          value={end}
+          onChange={(e) => setEnd(e.target.value)}
         />
       </div>
 
@@ -348,11 +453,11 @@ function FormAddExperience() {
         <label>Description</label>
         <input
           type="text"
-          placeholder="Description of role responsibilities and achievements"
-          // value={phone}
-          // onChange={(e) => setPhone(e.target.value)}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </div>
+      <Button type="btn--right">Add</Button>
     </form>
   );
 }
@@ -395,14 +500,22 @@ function DisplayEducation({ qualifications }) {
   );
 }
 
-function DisplayExperience() {
+function DisplayExperience({ employment }) {
   return (
     <div className="preview preview--experience">
       <h2 className="section-title">Experience</h2>
-      <h3>X</h3>
-      <p className="subheading">X</p>
-      <p>X - X</p>
-      <p>X</p>
+      <div>
+        {employment.map((empl) => (
+          <div key={empl.id} className="item">
+            <h3 className="item__title">{empl.jobTitle}</h3>
+            <p className="item__subtitle">{empl.employer}</p>
+            <p className="item__dates">
+              {empl.start} - {empl.end}
+            </p>
+            <p className="item__description">{empl.description}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
