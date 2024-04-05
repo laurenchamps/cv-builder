@@ -17,7 +17,7 @@ export default function QualificationList({
   return (
     <section className="input-block section__qualifications">
       <h2>Qualifications</h2>
-      <ul className="qualification-list">
+      <ul className="input-list">
         {qualifications.map((qual) => (
           <Qualification
             qualification={qual}
@@ -27,7 +27,7 @@ export default function QualificationList({
         ))}
       </ul>
       {!showQualificationForm && (
-        <Button onClick={handleToggleQualificationForm} type="btn-primary">
+        <Button onClick={handleToggleQualificationForm} type="btn--primary">
           Add qualification
         </Button>
       )}
@@ -35,12 +35,12 @@ export default function QualificationList({
         <FormAddQualification
           onAddQualification={onAddQualification}
           onToggleQualificationForm={handleToggleQualificationForm}
-          // onEditQuals={handleEditQuals}
-          // qualifications={qualifications}
         />
       )}
       {showQualificationForm && (
-        <Button onClick={handleToggleQualificationForm}>Cancel</Button>
+        <Button onClick={handleToggleQualificationForm} type="btn--primary">
+          Cancel
+        </Button>
       )}
     </section>
   );

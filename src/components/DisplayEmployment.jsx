@@ -1,7 +1,7 @@
 export default function DisplayEmployment({ employment }) {
   return (
     <div className="preview preview--experience">
-      <h2 className="section-title">Experience</h2>
+      <h2 className="section__display--title">Experience</h2>
       <div>
         {employment.map((empl) => (
           <div key={empl.id} className="item">

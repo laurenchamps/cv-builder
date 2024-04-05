@@ -17,7 +17,7 @@ export default function EmploymentList({
   return (
     <section className="input-block section__experience">
       <h2>Experience</h2>
-      <ul className="employment-list">
+      <ul className="input-list">
         {employment.map((empl) => (
           <Employment
             employment={empl}
@@ -27,7 +27,7 @@ export default function EmploymentList({
         ))}
       </ul>
       {!showEmploymentForm && (
-        <Button onClick={handleToggleEmploymentForm} type="btn-primary">
+        <Button onClick={handleToggleEmploymentForm} type="btn--primary">
           Add role
         </Button>
       )}
@@ -38,7 +38,9 @@ export default function EmploymentList({
         />
       )}
       {showEmploymentForm && (
-        <Button onClick={handleToggleEmploymentForm}>Cancel</Button>
+        <Button onClick={handleToggleEmploymentForm} type="btn--primary">
+          Cancel
+        </Button>
       )}
     </section>
   );

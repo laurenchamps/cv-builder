@@ -5,7 +5,7 @@ export default function Qualification({
   onDeleteQualification,
 }) {
   return (
-    <li className="list-item">
+    <li className="display-item">
       <div>
         <h3>{qualification.qualification}</h3>
         <p className="subtitle">{qualification.institution}</p>

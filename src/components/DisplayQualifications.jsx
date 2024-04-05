@@ -1,7 +1,7 @@
 export default function DisplayQualifications({ qualifications }) {
   return (
     <div className="preview preview--education">
-      <h2 className="section-title">Education</h2>
+      <h2 className="section__display--title">Education</h2>
       <div>
         {qualifications.map((qual) => (
           <div key={qual.id} className="item">

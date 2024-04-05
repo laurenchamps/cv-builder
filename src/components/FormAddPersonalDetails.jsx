@@ -9,7 +9,7 @@ export default function FormAddPersonalDetails({
   setPhone,
 }) {
   return (
-    <form className="input-block">
+    <form className="input-block section__personal-details">
       <h2>Personal details</h2>
 
       <div className="form-field">
