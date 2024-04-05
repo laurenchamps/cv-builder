@@ -10,39 +10,39 @@ import DisplayEmployment from './components/DisplayEmployment.jsx';
 import './main.scss';
 
 const initialDetails = {
-  firstName: 'Layla',
-  lastName: 'Mashni',
-  email: 'lylamshni123@gmail.com',
+  firstName: 'Ada',
+  lastName: 'Lovelace',
+  email: 'ada@lovelace.com',
   phone: '0400 123 456',
 };
 
 const initialQualifications = [
   {
-    qualification: 'Bachelor of Science',
-    institution: 'University of South Australia',
-    start: 2000,
-    end: 2003,
+    qualification: 'Bachelor of Mathematical Science',
+    institution: 'University of London',
+    start: 1835,
+    end: 1839,
     description:
-      'Understanding, reasoning and improving the natural world through systematic observation.',
+      'High level skills in all areas of mathematics. Awarded Babbage Prize for differential calculus.',
     id: 123456789,
   },
   {
-    qualification: 'Master of Public Health',
-    institution: 'University of Adelaide',
-    start: 2006,
-    end: 2008,
+    qualification: 'Master of Computer Science',
+    institution: 'University of London',
+    start: 1840,
+    end: 1842,
     description:
-      'In-depth study of epidemiology, health promotion, biostatistics, communicable diseases and global public health',
+      'Extensive studies in computer science. Achievements include publishing the first known algorithm.',
     id: 987654321,
   },
 ];
 
 const initialEmployment = [
   {
-    jobTitle: 'Web developer',
-    employer: 'Google',
-    start: 'Nov 2018',
-    end: '',
+    jobTitle: 'Computer Scientist',
+    employer: 'Lovelace Co',
+    start: '1843',
+    end: '1852',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
     id: 567891234,
