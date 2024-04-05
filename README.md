@@ -1,8 +1,17 @@
-# React + Vite
+# CV Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+First React project for The Odin Project.
 
-Currently, two official plugins are available:
+Concepts learnt:
+* React components
+* JSX
+* controlled elements
+* state & state management
+* React developer tools
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Built with Vite
+
+👉 [Live preview](https://main--laurenchamps-cvbuilder.netlify.app/)
+
+
+![Screenshot 2024-04-05 at 4 18 21 pm](https://github.com/laurenchamps/cv-builder/assets/96929810/dfd9e4a9-8610-4b91-a040-5f4d3f678ee3)
